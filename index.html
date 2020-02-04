@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400&display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js+Axios</title>
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <h1>Kako se menja cena Bitcoin-a?</h1>
+        <div
+          v-for="currency in info"
+          class="currency"
+        >
+          {{ currency.description }}:
+          <span class="lighten">
+            <span v-html="currency.symbol"></span>{{ currency.rate_float | currencydecimal }}
+          </span>
+        </div>
+      </div>
+      <div class="btn">
+      <button  class="b" onClick="window.location.reload();">Pritisni na svaki minut</button>
+    </div>
+
+    <script>
+    new Vue({
+  el: '.app',
+  data () {
+    return {
+      info: null
+    }
+  },
+  filters: {
+    currencydecimal (value) {
+      return value.toFixed(2)
+    }
+  },
+  mounted () {
+    axios
+      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then(response => (this.info =response.data.bpi))
+  }
+})
+
+
+    </script>
+    
+</body>
+</html>
